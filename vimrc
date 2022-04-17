@@ -3,11 +3,11 @@ filetype off " required
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-  
+
 " alternatively, pass a path where Vundle should install plugins
-  
+
 "call vundle#begin('~/some/path/here')
-  
+
 " let Vundle manage Vundle, required
 "Plugin 'reedes/vim-wordy'
 Plugin 'tpope/vim-surround'
@@ -43,30 +43,31 @@ Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 Plugin 'garbas/vim-snipmate'
 Plugin 'neoclide/coc.nvim', {'branch': 'release'}
-
+Plugin 'hesselbom/vim-hsftp'
+Plugin 'gyim/vim-boxdraw'
 " All of your Plugins must be added before the following line
 call vundle#end() " required
 filetype plugin indent on " required
-  
+
 " To ignore plugin indent changes, instead use:
-  
+
 "filetype plugin on
-  
-  
+
+
 " Brief help
-  
+
 " :PluginList - lists configured plugins
-  
+
 " :PluginInstall - installs plugins; append ! to update or just :PluginUpdate
-  
+
 " :PluginSearch foo - searches for foo; append ! to refresh local cache
-  
+
 " :PluginClean - confirms removal of unused plugins; append ! to auto-approve removal
-  
+
 "
-  
+
 " see :h vundle for more details or wiki for FAQ
-  
+
 " Put your non-Plugin stuff after this line
 """"""""""""""""""""""""COC VIM SETUP""""""""""""""
 if executable('intelephense')
@@ -98,6 +99,7 @@ if executable('intelephense')
         \})
   augroup END
 endif
+
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -224,22 +226,22 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 
 let g:NERDTreeDirArrowExpandable = '+'
-  
+
 let g:NERDTreeDirArrowCollapsible = '-'
 let g:coc_global_extensions = ['coc-emmet', 'coc-phpls', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
-autocmd VimEnter * NERDTree
+"autocmd VimEnter * NERDTree
 
 "let g:ctrlp_custom_ignore = 'node_modules\|web\|vendor\|components\|cordova\|var\|git'
 "let g:ctrlp_map = '<c-p>'
 "let g:ctrlp_match_window = 'order:ttb,min:1,max:30,results:30'
 "let g:ctrlp_cmdpalette_execute = 1
-  
+
 let g:php_cs_fixer_level = "psr4"
 let g:phpcomplete_add_class_extensions = ['mongo']
 let g:phpcomplete_add_function_extensions = ['mongo']
 
 
-  
+
 "let g:vue_disable_pre_processors=1
 let g:vue_pre_processors = []
 
@@ -251,23 +253,27 @@ let g:vrc_curl_opts = {
   \ '-s': '',
 \}
 "=========Mappings=========="
- 
-inoremap jj <Esc>  
-"inoremap ss <Esc> :wa<CR> 
-nmap ss <Esc> :wa<CR> 
-nmap <c-b> :NERDTreeToggle<CR> 
-nmap <S-p> :CtrlPCmdPalette<CR> 
-nmap <F1> :colorscheme onedark<CR> 
-nmap <F2> :colorscheme gruvbox<CR> 
-nmap <F3> :colorscheme morning<CR> 
-nmap <F4> :hi Normal guibg=NONE ctermbg=NONE<CR> 
-nmap <F5> :colorscheme morning<CR> 
+
+inoremap jj <Esc>
+"inoremap ss <Esc> :wa<CR>
+nmap ss <Esc> :wa<CR>
+nmap ff :call PhpCsFixerFixFile() <CR>
+nmap <c-b> :NERDTreeToggle<CR>
+nmap <c-r> :!php %
+nmap <S-p> :CtrlPCmdPalette<CR>
+nmap <F1> :colorscheme onedark<CR>
+nmap <F2> :colorscheme gruvbox<CR>
+nmap <F3> :colorscheme morning<CR>
+nmap <F4> :hi Normal guibg=NONE ctermbg=NONE<CR>
+nmap <F5> :colorscheme morning<CR>
 nmap <c-j> yyp:.!bash<CR>
 nnoremap <C-p> :GFiles<Cr>
 nnoremap <C-g> :Ag<Cr>
+nmap fu :Hupload<Cr><Cr>
 imap <C-J> <esc>a<Plug>snipMateNextOrTrigger
 smap <C-J> <Plug>snipMateNextOrTrigger
-"""""""""""""""""""""""""'START GUI SETTINGS'""""""""""""""""""""""""" 
+
+"""""""""""""""""""""""""'START GUI SETTINGS'"""""""""""""""""""""""""
 
 let g:coc_disable_startup_warning = 1
 set backspace=indent,eol,start "Make backspace behave like other editors"
@@ -295,12 +301,13 @@ set noswapfile
 "==========Searching========="
 set hlsearch
 set incsearch
+set ve=all
 "=========Visuals=========="
-  
+
 colorscheme gruvbox
 set background=dark
 "let g:airline_theme='monokai_tasty'
 set t_Co=256
 set nowrap
-"""""""""""""""""""""""""'END OF GUI SETTINGS'""""""""""""""""""""""""" 
+"""""""""""""""""""""""""'END OF GUI SETTINGS'"""""""""""""""""""""""""
 nmap vconf :tabedit ~/.vimrc<cr>
