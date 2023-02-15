@@ -1,40 +1,33 @@
 filetype off " required
-
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-
-" alternatively, pass a path where Vundle should install plugins
-
-"call vundle#begin('~/some/path/here')
-
 " let Vundle manage Vundle, required
-"Plugin 'reedes/vim-wordy'
+Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-surround'
+Plugin 'vim-vdebug/vdebug'
 Plugin 'tpope/vim-commentary'
 Plugin 'posva/vim-vue'
 Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree'
 Plugin 'fisadev/vim-ctrlp-cmdpalette'
-"Plugin 'ervandew/supertab'
 Plugin 'vim-airline/vim-airline'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'tpope/vim-fugitive'
-Plugin 'VundleVim/Vundle.vim'
-"Plugin 'ctrlpvim/ctrlp.vim'
-"Plugin 'diepm/vim-rest-console'
+Plugin 'diepm/vim-rest-console'
 Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plugin 'junegunn/fzf.vim'
+Plugin 'pbogut/fzf-mru.vim'
 Plugin 'joshdick/onedark.vim'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'tpope/vim-vinegar'
-Plugin 'scrooloose/nerdtree'
 Plugin 'StanAngeloff/php.vim'
 Plugin 'stephpy/vim-php-cs-fixer'
-Plugin 'maksimr/vim-jsbeautify'
 Plugin 'shawncplus/phpcomplete.vim'
-Plugin 'patstockwell/vim-monokai-tasty' " monoka like sublie theme
-"Plugin 'ErichDonGubler/vim-sublime-monokai' "sublime theme
+Plugin 'tobyS/pdv'
+Plugin 'maksimr/vim-jsbeautify'
+Plugin 'patstockwell/vim-monokai-tasty'
 Plugin 'tomasiser/vim-code-dark'
 Plugin 'nelsyeung/twig.vim'
 Plugin 'morhetz/gruvbox'
@@ -45,30 +38,24 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'neoclide/coc.nvim', {'branch': 'release'}
 Plugin 'hesselbom/vim-hsftp'
 Plugin 'gyim/vim-boxdraw'
+"Plugin 'ErichDonGubler/vim-sublime-monokai' 
+"Plugin 'ctrlpvim/ctrlp.vim'
+"Plugin 'reedes/vim-wordy'
 " All of your Plugins must be added before the following line
 call vundle#end() " required
 filetype plugin indent on " required
-
 " To ignore plugin indent changes, instead use:
-
 "filetype plugin on
-
-
 " Brief help
-
 " :PluginList - lists configured plugins
-
 " :PluginInstall - installs plugins; append ! to update or just :PluginUpdate
-
 " :PluginSearch foo - searches for foo; append ! to refresh local cache
-
 " :PluginClean - confirms removal of unused plugins; append ! to auto-approve removal
-
-"
-
 " see :h vundle for more details or wiki for FAQ
-
 " Put your non-Plugin stuff after this line
+
+
+
 """"""""""""""""""""""""COC VIM SETUP""""""""""""""
 if executable('intelephense')
   augroup LspPHPIntelephense
@@ -166,11 +153,6 @@ augroup mygroup
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
 " Remap keys for applying codeAction to the current line.
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
@@ -224,24 +206,18 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 """""""""""""""""""END OF COC VIM"""""""""""""""""""
 
+let g:NERDTreeDirArrowExpandable = '📁'
 
-let g:NERDTreeDirArrowExpandable = '+'
+let g:NERDTreeDirArrowCollapsible = '📂'
 
-let g:NERDTreeDirArrowCollapsible = '-'
 let g:coc_global_extensions = ['coc-emmet', 'coc-phpls', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
-"autocmd VimEnter * NERDTree
 
-"let g:ctrlp_custom_ignore = 'node_modules\|web\|vendor\|components\|cordova\|var\|git'
-"let g:ctrlp_map = '<c-p>'
-"let g:ctrlp_match_window = 'order:ttb,min:1,max:30,results:30'
-"let g:ctrlp_cmdpalette_execute = 1
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9 } }
+let $FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%'  --margin=1,4 --preview 'bat --color=always --style=header,grid  {}'"
 
 let g:php_cs_fixer_level = "psr4"
-let g:phpcomplete_add_class_extensions = ['mongo']
-let g:phpcomplete_add_function_extensions = ['mongo']
-
-
-
+let g:vdebug_options = { 'port': '9003', 'host': 'host.docker.internal','ide_key' : 'vim'} 
+let g:vdebug_options.path_maps = {"/data/": "."}
 "let g:vue_disable_pre_processors=1
 let g:vue_pre_processors = []
 
@@ -252,24 +228,43 @@ let g:vrc_curl_opts = {
   \ '--max-time': 60,
   \ '-s': '',
 \}
-"=========Mappings=========="
+let g:snipMate = { 'snippet_version' : 1  }
+let g:fzf_mru_no_sort = 1
+let g:fzf_mru_relative = 1
+let g:fzf_action = { 'enter': 'tab split'  }
+"=========Custom functions==========
+" filename: ~/.vim/plugins/create_php_class.vim
+
+function! CreatePhpClass()
+  let filename = expand('%:t:r')
+  let namespace = matchstr(join(readfile(expand('%:p'))), 'namespace\s\+\zs\w\+;')
+
+  "let class_name = input('Enter class name: ')
+  "let new_file = expand('%:p:h') . '/' . class_name . '.php'
+  "call writefile(['<?php', '', 'namespace ' . namespace . ';', '', 'class ' . class_name . ' {', '', '}', ''], new_file)
+  execute 'normal! "xy'. filename
+
+endfunction
+
+command! CreatePhpClass call CreatePhpClass()
+
+"=========Mappings==========
 
 inoremap jj <Esc>
-"inoremap ss <Esc> :wa<CR>
 nmap ss <Esc> :wa<CR>
-nmap ff :call PhpCsFixerFixFile() <CR>
+"nmap ff :silent !docker exec spryker_b2b_dev_cli_1 vendor/bin/console code:sniff:style -f % <CR>:e % <CR>
+nmap ff :Format <CR>
 nmap <c-b> :NERDTreeToggle<CR>
-nmap <c-r> :!php %
-nmap <S-p> :CtrlPCmdPalette<CR>
+nmap nr :NERDTreeFind<CR>
 nmap <F1> :colorscheme onedark<CR>
 nmap <F2> :colorscheme gruvbox<CR>
 nmap <F3> :colorscheme morning<CR>
-nmap <F4> :hi Normal guibg=NONE ctermbg=NONE<CR>
+imap <F4> :hi Normal guibg=NONE ctermbg=NONE<CR>
 nmap <F5> :colorscheme morning<CR>
 nmap <c-j> yyp:.!bash<CR>
-nnoremap <C-p> :GFiles<Cr>
+nnoremap <C-p> :Files<Cr>
 nnoremap <C-g> :Ag<Cr>
-nmap fu :Hupload<Cr><Cr>
+nnoremap <c-r> :FZFMru<Cr>
 imap <C-J> <esc>a<Plug>snipMateNextOrTrigger
 smap <C-J> <Plug>snipMateNextOrTrigger
 
@@ -279,8 +274,9 @@ let g:coc_disable_startup_warning = 1
 set backspace=indent,eol,start "Make backspace behave like other editors"
 set number "set numbers for line"
 set mouse=a
-set fillchars+=vert:\#
+set fillchars+=vert:\|
 syntax enable
+syntax on
 set ruler
 set hidden
 set laststatus=2
@@ -298,16 +294,31 @@ set cursorline
 ":set guioptions-=L "remove left-hand scroll bar
 ":set lines=999 columns=999
 set noswapfile
+
 "==========Searching========="
 set hlsearch
 set incsearch
-set ve=all
-"=========Visuals=========="
+"set ve=all
 
-colorscheme gruvbox
+"=========Visuals=========="
+colorscheme onedark
 set background=dark
-"let g:airline_theme='monokai_tasty'
+let g:airline_theme='monokai_tasty'
 set t_Co=256
 set nowrap
+hi Normal guibg=NONE ctermbg=NONE
+
 """""""""""""""""""""""""'END OF GUI SETTINGS'"""""""""""""""""""""""""
 nmap vconf :tabedit ~/.vimrc<cr>
+au BufWritePost ~/.vimrc source ~/.vimrc
+
+"===========depreacted commands
+
+"autocmd VimEnter * NERDTree
+"let g:ctrlp_custom_ignore = 'node_modules\|web\|vendor\|components\|cordova\|var\|git'
+"let g:ctrlp_map = '<c-p>'
+"let g:ctrlp_match_window = 'order:ttb,min:1,max:30,results:30'
+"let g:ctrlp_cmdpalette_execute = 1
+"let g:phpcomplete_add_class_extensions = ['mongo']
+"let g:phpcomplete_add_function_extensions = ['mongo']
+"nmap fu :Hupload<Cr><Cr>
