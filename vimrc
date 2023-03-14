@@ -3,34 +3,35 @@ filetype off " required
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " let Vundle manage Vundle, required
+
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-surround'
+Plugin 'preservim/tagbar'
 Plugin 'vim-vdebug/vdebug'
 Plugin 'tpope/vim-commentary'
 Plugin 'posva/vim-vue'
 Plugin 'scrooloose/nerdcommenter'
+"nerd tree
 Plugin 'scrooloose/nerdtree'
-Plugin 'fisadev/vim-ctrlp-cmdpalette'
-Plugin 'vim-airline/vim-airline'
-Plugin 'airblade/vim-gitgutter'
+Plugin 'PhilRunninger/nerdtree-visual-selection'
+
+Plugin 'kdheepak/lazygit.nvim'
+Plugin 'ervandew/supertab'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'tpope/vim-fugitive'
 Plugin 'diepm/vim-rest-console'
+"FZF finder
 Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plugin 'junegunn/fzf.vim'
 Plugin 'pbogut/fzf-mru.vim'
-Plugin 'joshdick/onedark.vim'
+
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'tpope/vim-vinegar'
 Plugin 'StanAngeloff/php.vim'
 Plugin 'stephpy/vim-php-cs-fixer'
-Plugin 'shawncplus/phpcomplete.vim'
 Plugin 'tobyS/pdv'
 Plugin 'maksimr/vim-jsbeautify'
-Plugin 'patstockwell/vim-monokai-tasty'
-Plugin 'tomasiser/vim-code-dark'
 Plugin 'nelsyeung/twig.vim'
-Plugin 'morhetz/gruvbox'
 Plugin 'grvcoelho/vim-javascript-snippets'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
@@ -38,23 +39,22 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'neoclide/coc.nvim', {'branch': 'release'}
 Plugin 'hesselbom/vim-hsftp'
 Plugin 'gyim/vim-boxdraw'
-"Plugin 'ErichDonGubler/vim-sublime-monokai' 
-"Plugin 'ctrlpvim/ctrlp.vim'
-"Plugin 'reedes/vim-wordy'
+"Themes
+Plugin 'vim-airline/vim-airline'
+Plugin 'joshdick/onedark.vim'
+Plugin 'doums/darcula'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'patstockwell/vim-monokai-tasty'
+Plugin 'tomasiser/vim-code-dark'
+Plugin 'morhetz/gruvbox'
+Plugin 'christophermca/meta5'
+Plugin 'ryanoasis/vim-devicons'
+
 " All of your Plugins must be added before the following line
 call vundle#end() " required
 filetype plugin indent on " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
-" Brief help
-" :PluginList - lists configured plugins
-" :PluginInstall - installs plugins; append ! to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append ! to refresh local cache
-" :PluginClean - confirms removal of unused plugins; append ! to auto-approve removal
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
-
-
 
 """"""""""""""""""""""""COC VIM SETUP""""""""""""""
 if executable('intelephense')
@@ -95,6 +95,7 @@ inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
+
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
@@ -125,7 +126,7 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> D :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -136,14 +137,14 @@ function! s:show_documentation()
 endfunction
 
 " Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+" autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
+nmap rn <Plug>(coc-rename)
 
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+"xmap <leader>f  <Plug>(coc-format-selected)
+"nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -154,9 +155,9 @@ augroup mygroup
 augroup end
 
 " Remap keys for applying codeAction to the current line.
-nmap <leader>ac  <Plug>(coc-codeaction)
+nmap ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
+nmap qf  <Plug>(coc-fix-current)
 
 " Introduce function text object
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
@@ -168,8 +169,8 @@ omap af <Plug>(coc-funcobj-a)
 " Use <TAB> for selections ranges.
 " NOTE: Requires 'textDocument/selectionRange' support from the language server.
 " coc-tsserver, coc-python are the examples of servers that support it.
-nmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <TAB> <Plug>(coc-range-select)
+"nmap <silent> <TAB> <Plug>(coc-range-select)
+"xmap <silent> <TAB> <Plug>(coc-range-select)
 
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocAction('format')
@@ -203,23 +204,27 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
+let g:coc_global_extensions = ['coc-emmet', 'coc-phpls', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
+
 
 """""""""""""""""""END OF COC VIM"""""""""""""""""""
 
-let g:NERDTreeDirArrowExpandable = '📁'
+let g:NERDTreeDirArrowExpandable = ''
 
-let g:NERDTreeDirArrowCollapsible = '📂'
+let g:NERDTreeDirArrowCollapsible = ''
 
-let g:coc_global_extensions = ['coc-emmet', 'coc-phpls', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
-
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.9 } }
-let $FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%'  --margin=1,4 --preview 'bat --color=always --style=header,grid  {}'"
+" Fuzzy finder
+let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.9 } }
+let $FZF_DEFAULT_OPTS="--ansi --preview-window 'right:70%'  --margin=1,2 --preview 'bat --color=always --style=header,grid  {}'"
+let g:fzf_action = { 'enter': 'tab split'  }
+let g:fzf_mru_no_sort = 1
+let g:fzf_mru_relative = 1
 
 let g:php_cs_fixer_level = "psr4"
 let g:vdebug_options = { 'port': '9003', 'host': 'host.docker.internal','ide_key' : 'vim'} 
 let g:vdebug_options.path_maps = {"/data/": "."}
 "let g:vue_disable_pre_processors=1
-let g:vue_pre_processors = []
+"let g:vue_pre_processors = []
 
 let g:vrc_output_buffer_name = '__VRC_OUTPUT.json'
 let g:vrc_curl_opts = {
@@ -228,45 +233,35 @@ let g:vrc_curl_opts = {
   \ '--max-time': 60,
   \ '-s': '',
 \}
+
 let g:snipMate = { 'snippet_version' : 1  }
-let g:fzf_mru_no_sort = 1
-let g:fzf_mru_relative = 1
-let g:fzf_action = { 'enter': 'tab split'  }
+
 "=========Custom functions==========
-" filename: ~/.vim/plugins/create_php_class.vim
-
-function! CreatePhpClass()
-  let filename = expand('%:t:r')
-  let namespace = matchstr(join(readfile(expand('%:p'))), 'namespace\s\+\zs\w\+;')
-
-  "let class_name = input('Enter class name: ')
-  "let new_file = expand('%:p:h') . '/' . class_name . '.php'
-  "call writefile(['<?php', '', 'namespace ' . namespace . ';', '', 'class ' . class_name . ' {', '', '}', ''], new_file)
-  execute 'normal! "xy'. filename
-
-endfunction
-
-command! CreatePhpClass call CreatePhpClass()
-
+augroup yaml_fix
+    autocmd!
+    autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=0# indentkeys-=<:>
+augroup END
 "=========Mappings==========
 
 inoremap jj <Esc>
 nmap ss <Esc> :wa<CR>
-"nmap ff :silent !docker exec spryker_b2b_dev_cli_1 vendor/bin/console code:sniff:style -f % <CR>:e % <CR>
 nmap ff :Format <CR>
 nmap <c-b> :NERDTreeToggle<CR>
 nmap nr :NERDTreeFind<CR>
-nmap <F1> :colorscheme onedark<CR>
-nmap <F2> :colorscheme gruvbox<CR>
-nmap <F3> :colorscheme morning<CR>
-imap <F4> :hi Normal guibg=NONE ctermbg=NONE<CR>
-nmap <F5> :colorscheme morning<CR>
-nmap <c-j> yyp:.!bash<CR>
+"nmap <F1> :noh<CR>
+nmap <F2> :noh<CR>
+nmap <F5> :Fold <CR>
+nmap <F4> :!cat %<CR>
+nmap <F8> :TagbarToggle<CR>
+" FZF FINDER STUFF
 nnoremap <C-p> :Files<Cr>
-nnoremap <C-g> :Ag<Cr>
-nnoremap <c-r> :FZFMru<Cr>
+nnoremap <C-g> :Ag <C-R><C-W><Cr>
+nnoremap <c-r> :Buffers<Cr>
+nnoremap <c-h> :FZFMru<Cr>
 imap <C-J> <esc>a<Plug>snipMateNextOrTrigger
 smap <C-J> <Plug>snipMateNextOrTrigger
+"nmap <c-j> yyp:.!bash<CR>
+nmap zz :silent !docker exec spryker_b2b_dev_cli_1 vendor/bin/console code:sniff:style -f % <CR>:e % <CR>
 
 """""""""""""""""""""""""'START GUI SETTINGS'"""""""""""""""""""""""""
 
@@ -274,8 +269,8 @@ let g:coc_disable_startup_warning = 1
 set backspace=indent,eol,start "Make backspace behave like other editors"
 set number "set numbers for line"
 set mouse=a
-set fillchars+=vert:\|
-syntax enable
+"set fillchars+=vert:\|
+"syntax enable
 syntax on
 set ruler
 set hidden
@@ -283,16 +278,11 @@ set laststatus=2
 set smartindent
 set ignorecase
 "set relativenumber
-set st=4 sw=4 et
+"set st=4 sw=4 et
 set shiftwidth=4
 set tabstop=8
 let &colorcolumn="190"
 set cursorline
-":set guioptions-=m "remove menu bar
-":set guioptions-=T "remove toolbar
-":set guioptions-=r "remove right-hand scroll bar
-":set guioptions-=L "remove left-hand scroll bar
-":set lines=999 columns=999
 set noswapfile
 
 "==========Searching========="
@@ -301,7 +291,12 @@ set incsearch
 "set ve=all
 
 "=========Visuals=========="
-colorscheme onedark
+"
+ if (has('termguicolors'))
+    set termguicolors
+ endif
+
+colorscheme gruvbox
 set background=dark
 let g:airline_theme='monokai_tasty'
 set t_Co=256
@@ -309,8 +304,9 @@ set nowrap
 hi Normal guibg=NONE ctermbg=NONE
 
 """""""""""""""""""""""""'END OF GUI SETTINGS'"""""""""""""""""""""""""
-nmap vconf :tabedit ~/.vimrc<cr>
-au BufWritePost ~/.vimrc source ~/.vimrc
+nmap vconf :tabedit ~/.config/nvim/init.vim<cr>
+nmap zconf :tabedit ~/.zshrc<cr>
+au BufWritePost ~/.config/nvim/init.vim source ~/.config/nvim/init.vim
 
 "===========depreacted commands
 
@@ -322,3 +318,13 @@ au BufWritePost ~/.vimrc source ~/.vimrc
 "let g:phpcomplete_add_class_extensions = ['mongo']
 "let g:phpcomplete_add_function_extensions = ['mongo']
 "nmap fu :Hupload<Cr><Cr>
+"imap <F4> :hi Normal guibg=NONE ctermbg=NONE<CR>
+":set guioptions-=m "remove menu bar
+":set guioptions-=T "remove toolbar
+":set guioptions-=r "remove right-hand scroll bar
+":set guioptions-=L "remove left-hand scroll bar
+":set lines=999 columns=999
+"Plugin 'ErichDonGubler/vim-sublime-monokai' 
+"Plugin 'ctrlpvim/ctrlp.vim'
+"Plugin 'reedes/vim-wordy'
+"let NERDTreeMapOpenInTab='<ENTER>'
