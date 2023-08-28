@@ -1,0 +1,13 @@
+{
+  "intelephense.licenceKey": "00K5CXTCWEAFCU9",
+  "coc.preferences.extensionUpdateCheck": "never",
+  "snippets.ultisnips.pythonPrompt": false,
+  "suggest.noselect": true,
+  "suggest.insertMode": "insert",
+  "suggest.autoTrigger": "always",
+  "prettier.semi": true,
+  "prettier.tabWidth": 2,
+  "coc.preferences.formatOnSave": false,
+  "intelephense.environment.phpVersion": "8.1.0"
+}
+

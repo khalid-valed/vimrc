@@ -3,7 +3,7 @@ filetype off " required
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " let Vundle manage Vundle, required
-
+Plugin 'docteurklein/php-getter-setter.vim'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'preservim/tagbar'
@@ -14,19 +14,17 @@ Plugin 'scrooloose/nerdcommenter'
 "nerd tree
 Plugin 'scrooloose/nerdtree'
 Plugin 'PhilRunninger/nerdtree-visual-selection'
-
 Plugin 'kdheepak/lazygit.nvim'
-Plugin 'ervandew/supertab'
-Plugin 'jiangmiao/auto-pairs'
+"Plugin 'ervandew/supertab'
 Plugin 'tpope/vim-fugitive'
 Plugin 'diepm/vim-rest-console'
+
 "FZF finder
 Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plugin 'junegunn/fzf.vim'
 Plugin 'pbogut/fzf-mru.vim'
 
 Plugin 'jelera/vim-javascript-syntax'
-Plugin 'tpope/vim-vinegar'
 Plugin 'StanAngeloff/php.vim'
 Plugin 'stephpy/vim-php-cs-fixer'
 Plugin 'tobyS/pdv'
@@ -39,6 +37,7 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'neoclide/coc.nvim', {'branch': 'release'}
 Plugin 'hesselbom/vim-hsftp'
 Plugin 'gyim/vim-boxdraw'
+
 "Themes
 Plugin 'vim-airline/vim-airline'
 Plugin 'joshdick/onedark.vim'
@@ -87,7 +86,6 @@ if executable('intelephense')
   augroup END
 endif
 
-
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
@@ -104,16 +102,19 @@ function! s:check_back_space() abort
 endfunction
 
 " Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+"inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
 " <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
+
+"if exists('*complete_info')
+"  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"  -this like destroys tab behavior so be accurate
+"else
+"  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"endif
+
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
@@ -149,7 +150,7 @@ nmap rn <Plug>(coc-rename)
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
   " Update signature help on jump placeholder.
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
@@ -169,8 +170,8 @@ omap af <Plug>(coc-funcobj-a)
 " Use <TAB> for selections ranges.
 " NOTE: Requires 'textDocument/selectionRange' support from the language server.
 " coc-tsserver, coc-python are the examples of servers that support it.
-"nmap <silent> <TAB> <Plug>(coc-range-select)
-"xmap <silent> <TAB> <Plug>(coc-range-select)
+nmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <TAB> <Plug>(coc-range-select)
 
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocAction('format')
@@ -186,25 +187,8 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " provide custom statusline: lightline.vim, vim-airline.
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-" Mappings using CoCList:
-" Show all diagnostics.
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
-let g:coc_global_extensions = ['coc-emmet', 'coc-phpls', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
+let g:coc_global_extensions = ['coc-emmet', 'coc-phpls', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-pairs', 'coc-snippets']
 
 
 """""""""""""""""""END OF COC VIM"""""""""""""""""""
@@ -236,11 +220,6 @@ let g:vrc_curl_opts = {
 
 let g:snipMate = { 'snippet_version' : 1  }
 
-"=========Custom functions==========
-augroup yaml_fix
-    autocmd!
-    autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=0# indentkeys-=<:>
-augroup END
 "=========Mappings==========
 
 inoremap jj <Esc>
@@ -253,15 +232,21 @@ nmap <F2> :noh<CR>
 nmap <F5> :Fold <CR>
 nmap <F4> :!cat %<CR>
 nmap <F8> :TagbarToggle<CR>
+nmap <F10> :!gitk %<CR>
 " FZF FINDER STUFF
 nnoremap <C-p> :Files<Cr>
 nnoremap <C-g> :Ag <C-R><C-W><Cr>
 nnoremap <c-r> :Buffers<Cr>
 nnoremap <c-h> :FZFMru<Cr>
+nnoremap <c-j> :Ag<Cr>
 imap <C-J> <esc>a<Plug>snipMateNextOrTrigger
 smap <C-J> <Plug>snipMateNextOrTrigger
+
+nnoremap <C-f> :Ag <Cr>
 "nmap <c-j> yyp:.!bash<CR>
 nmap zz :silent !docker exec spryker_b2b_dev_cli_1 vendor/bin/console code:sniff:style -f % <CR>:e % <CR>
+
+autocmd FileType php noremap ff :call PhpCsFixerFixFile()<cr>
 
 """""""""""""""""""""""""'START GUI SETTINGS'"""""""""""""""""""""""""
 
@@ -299,7 +284,7 @@ set incsearch
 colorscheme gruvbox
 set background=dark
 let g:airline_theme='monokai_tasty'
-set t_Co=256
+"set t_Co=256
 set nowrap
 hi Normal guibg=NONE ctermbg=NONE
 
@@ -324,7 +309,26 @@ au BufWritePost ~/.config/nvim/init.vim source ~/.config/nvim/init.vim
 ":set guioptions-=r "remove right-hand scroll bar
 ":set guioptions-=L "remove left-hand scroll bar
 ":set lines=999 columns=999
-"Plugin 'ErichDonGubler/vim-sublime-monokai' 
 "Plugin 'ctrlpvim/ctrlp.vim'
 "Plugin 'reedes/vim-wordy'
 "let NERDTreeMapOpenInTab='<ENTER>'
+"
+"
+" Mappings using CoCList:
+" Show all diagnostics.
+"nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+"" Manage extensions.
+"nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+"" Show commands.
+"nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+"" Find symbol of current document.
+"nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+"" Search workspace symbols.
+"nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+"" Do default action for next item.
+"nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+"" Do default action for previous item.
+"nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+"" Resume latest coc list.
+"nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
